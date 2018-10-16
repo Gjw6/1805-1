@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!--配置时需要和dao接口保持一致  -->
+<mapper namespace="com.jt.sso.mapper.UserMapper">
+	
+	<select id="findCheckUser" resultType="int">
+		select count(*) from tb_user where ${column}=#{param}
+	</select>
+</mapper>

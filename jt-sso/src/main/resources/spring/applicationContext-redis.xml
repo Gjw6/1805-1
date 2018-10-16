@@ -1,0 +1,63 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+	<!-- 配置PoolConfig -->
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxTotal" value="${redis.maxTotal}"/> 
+		<property name="maxIdle" value="${redis.maxIdle}"/>
+		<property name="minIdle" value="${redis.minIdle}"/> 
+		<property name="maxWaitMillis" value="${redis.maxWait}"/>  
+		<property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+	</bean>
+	
+	
+	<!-- 	<bean id="shard1" class="redis.clients.jedis.JedisShardInfo">
+		<constructor-arg name="host" value="${redis.host}"></constructor-arg>
+		<constructor-arg name="port" value="${redis.port1}"></constructor-arg>
+	</bean>
+	<bean id="shard2" class="redis.clients.jedis.JedisShardInfo">
+		<constructor-arg name="host" value="${redis.host}"></constructor-arg>
+		<constructor-arg name="port" value="${redis.port2}"></constructor-arg>
+	</bean>
+	<bean id="shard3" class="redis.clients.jedis.JedisShardInfo">
+		<constructor-arg name="host" value="${redis.host}"></constructor-arg>
+		<constructor-arg name="port" value="${redis.port3}"></constructor-arg>
+	</bean>
+	
+	<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
+		<constructor-arg name="poolConfig" ref="poolConfig"></constructor-arg>
+		<constructor-arg name="shards">
+			<list>
+				<ref bean="shard1" />
+				<ref bean="shard2" />
+				<ref bean="shard3" />
+			</list>
+		</constructor-arg>
+	</bean> -->
+	
+	<!-- <bean id="JedisSentinelPool" class="redis.clients.jedis.JedisSentinelPool">
+		<constructor-arg name="masterName" value="mymaster"></constructor-arg>
+		<constructor-arg name="sentinels" >
+			<set>
+				<value>${redis.sentinel}</value>
+			</set>
+		</constructor-arg>
+		<constructor-arg name="poolConfig" ref="poolConfig"></constructor-arg>
+	</bean> -->
+	<!-- 利用spring工厂实例化JedisCluster对象 -->
+	<bean id="jedisCluster" class="com.jt.common.factory.JedisClusterFactory">
+		<property name="propertySource">
+            <value>classpath:/property/redis.properties</value>  
+        </property>  
+        <!-- 配置文件中的前缀 -->
+		<property name="redisNodePrefix" value="redis.cluster"></property>
+		<property name="poolConfig" ref="poolConfig"></property>
+	</bean>
+</beans>

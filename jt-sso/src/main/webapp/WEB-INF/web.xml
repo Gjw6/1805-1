@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="jt-sso" version="2.5">
+	<display-name>jt-sso</display-name>
+
+	<!--配置前端控制器  -->
+	<servlet>
+		<servlet-name>springmvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!--初始化springMVC的配置文件  -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:/spring/applicationContext*.xml</param-value>
+		</init-param>
+		<!--当web服务器启动时加载该Servlet.实例化servlet  -->
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<!--请求路径
+		后缀型路径:  *.do   只拦截.do结尾的请求
+		前缀型路径:  /service/*     只拦截请求以service开头的
+		全路径:     /service/*.do
+		/		  前缀型路径
+				 	表示拦截全部的请求和静态资源(html/css/js/图片...)
+					 放行动态资源(.jsp等),即直接访问,现在很多网站不加后缀访问没有.do
+		/*      一定不能写/* 任何请求和资源都要拦截  ,走springmvc内部流程
+	  -->
+	<servlet-mapping>
+		<servlet-name>springmvc</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<!--乱码处理问题 主要解决POST乱码问题  -->
+	<filter>
+		<filter-name>characterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<!--设定字符集编码格式  -->
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<!-- 过滤所有请求,区别于拦截器 -->
+	<filter-mapping>
+		<filter-name>characterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+</web-app>
